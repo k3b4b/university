@@ -1,53 +1,47 @@
+package paintcg;
+
    import java.applet.*;
    import java.awt.*;
    import java.awt.event.*;
 
-   public class ImageEdit extends Applet {
-      
-      private Canvas screen = new Canvas();//область для рисования
 
-         // группа переключателей цветов
+public class ImageEdit extends Applet {
+      
+      private Canvas screen = new Canvas();
+
       private CheckboxGroup group = new CheckboxGroup();
       private Checkbox
-            // красный переключатель
          r = new Checkbox("красный",group,true),
-            // зеленый переключатель
          g = new Checkbox("зеленый",group,false),
-            // синий переключатель
          b = new Checkbox("синий",group,false);
 
-         // кнопка очистки области рисования
-      private Button clear = new Button("Очистить");  
+      private Button clear = new Button("Очистить");   			  
       
-      /**
-      * В это методе проводится инициализация апплета.
-      */
-      public static void main(String args[]) {
-         // установка параметров апплета
+      public void init() {
+    	 Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    	 double wid = screenSize.getWidth();
+    	 double hei = screenSize.getHeight();
+    	 int h= (int) hei;
+    	 int w = (int) wid;
          setBackground(Color.lightGray);  
-         // настройка компонентов
-         screen.setSize(300,200);
+         screen.setSize(w-100,h-100);
          screen.setBackground(Color.white);
          r.setForeground(Color.red);
          g.setForeground(Color.green);
          b.setForeground(Color.blue);
          clear.addActionListener(new buttonListener());
          screen.addMouseMotionListener(new scrListener());
-         // добавление компонентов на рабочую область
          add(r);
          add(g);
          add(b);
          add(screen);
          add(clear);
       }
-         // реализация слушателя события действий
       private class buttonListener implements ActionListener {
          public void actionPerformed(ActionEvent e) {
             screen.repaint();
          }
       }
-         // реализация слушателя события перетаскивания
-            и перемещения мыши
       private class scrListener implements MouseMotionListener {
          public void mouseDragged(MouseEvent e) {
             Graphics gr = screen.getGraphics();
@@ -61,5 +55,8 @@
          }
          public void mouseMoved(MouseEvent e) {
          }
+      }
+      public static void main(String args[]) {
+    	  new ImageEdit().init();
       }
    }
