@@ -1,0 +1,21 @@
+interval(10)
+XNeed = 40
+XReal = EntityParent:pos():z()-EntityToEscape:pos():z()
+if(First !=2){
+    ErrorOld  = 0
+    I = 0
+    First = 2
+}
+Kp = 0.8
+Ki = 0.00005
+Kd = 0.2
+Error = XNeed-XReal
+Integr = Integr + Error
+P = Kp * Error
+It = Integr * 0.01
+I = Ki * It
+EEo = Error-ErrorOld
+EEot =  EEo / 0.01
+D = Kd * EEot
+PID = P + I + D
+ErrorOld = Error
