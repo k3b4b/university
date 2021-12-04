@@ -14,9 +14,9 @@
 # Output:         Amount of force you need to make your current value to desired value (ex. thruster force)
 # SetPoint:       Desired value
 # Enabled:        Allows you to turn it off\on
-# Kp:             Proportional gain (recommended: 0.7)
-# Ki:             Integral gain (recommended: 0.5)
-# Kd:             Derivative gain (recommended: 0.05)
+# Kp:             Proportional gain (recommended: 0.7)          |
+# Ki:             Integral gain (recommended: 0.5)              | For stable hoverboard you can use tho angle thrusters and I = 0.3;D = 0.05 
+# Kd:             Derivative gain (recommended: 0.05)           |
 # IsAngle:        Set it to 1 if you are dealing with angles
 
 # Local variables DO NOT TOUCH
@@ -32,8 +32,8 @@ IsAngle = 1
 
 # Coefficients
 Kp = 0.7
-Ki = 0.5
-Kd = 0.05
+Ki = 0.3
+Kd = 0.02
 
 # Desired value
 SetPoint = 0
