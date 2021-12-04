@@ -1,21 +1,98 @@
-interval(10)
-XNeed = 40
-XReal = EntityParent:pos():z()-EntityToEscape:pos():z()
-if(First !=2){
-    ErrorOld  = 0
-    I = 0
-    First = 2
+#
+# Name: PID Controller
+# Version: 1.0
+# Authors: j10max (edited by k3b4b)
+# Update: 05.12.2021 (DD/MM/YY)
+#
+@name PID
+@inputs Input Enabled 
+@outputs Output 
+@persist ErrorPrevious
+@trigger
+
+# Input:          Current value
+# Output:         Amount of force you need to make your current value to desired value (ex. thruster force)
+# SetPoint:       Desired value
+# Enabled:        Allows you to turn it off\on
+# Kp:             Proportional gain (recommended: 0.7)
+# Ki:             Integral gain (recommended: 0.5)
+# Kd:             Derivative gain (recommended: 0.05)
+# IsAngle:        Set it to 1 if you are dealing with angles
+
+# Local variables DO NOT TOUCH
+TimePrevious = 0
+I = 0
+ErrorTemp = 0
+
+## CONFIGURABLE
+##
+
+# Are you dealing with angles?
+IsAngle = 1
+
+# Coefficients
+Kp = 0.7
+Ki = 0.5
+Kd = 0.05
+
+# Desired value
+SetPoint = 0
+
+##
+## CONFIGURABLE
+
+# Compute PID
+function compute(){
+  # Check for manual mode
+  if(Enabled == 0){
+    return
+  }
+
+  # Calculate system time
+  Time = systime()
+  TimeDelta = Time - TimePrevious
+
+  # Calculate error
+  Error = SetPoint - Input
+  # Check for angle mode
+  if (IsAngle==1){
+    if (Error <-180){
+      Error +=360
+    }
+    else{
+      Error = Error
+    }
+  }
+  # Proportional
+  P = Kp * Error
+
+  # Integral
+  ErrorTemp += Error
+  I = Ki * ErrorTemp * 0.01
+
+  # Derivative
+  D = ((Error - ErrorPrevious) / 0.01) * Kd
+
+  # PID
+  Output = P + I + D
+
+  # Remember vars for next loop
+  ErrorPrevious = Error
+  TimePrevious = Time
 }
-Kp = 0.8
-Ki = 0.00005
-Kd = 0.2
-Error = XNeed-XReal
-Integr = Integr + Error
-P = Kp * Error
-It = Integr * 0.01
-I = Ki * It
-EEo = Error-ErrorOld
-EEot =  EEo / 0.01
-D = Kd * EEot
-PID = P + I + D
-ErrorOld = Error
+
+# Init
+function init(){
+  hint("PID Controller is ON", 3)
+  ErrorPrevious = 0
+  I = Output
+}
+
+# Constructor
+if(first()){
+  init()
+  runOnTick(1)
+}
+
+# Start
+compute()
